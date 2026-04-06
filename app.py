@@ -50,15 +50,24 @@ col_cfg, col_send = st.columns([1, 1], gap="large")
 with col_cfg:
     st.subheader("Configuration")
     with st.form("config"):
-        smtp_host  = st.text_input("SMTP Host",  value="mail.grf.bg.ac.rs")
-        smtp_port  = st.number_input("SMTP Port", value=587, step=1, min_value=1)
-        from_addr  = st.text_input("Sender Email", value="nmilovanovic@grf.bg.ac.rs")
-        from_name  = st.text_input("Sender Name",  value="Никола Миловановић")
-        password   = st.text_input("Password", type="password")
-        subject    = st.text_input("Subject", value="Путна инфраструктура, поставка задатка")
-        bcc_raw    = st.text_input("BCC (comma-separated)", value="904_22@student.grf.bg.ac.rs")
-        batch_size = st.number_input("Batch size", value=40, min_value=1)
-        sleep_sec  = st.number_input("Sleep between batches (sec)", value=30, min_value=0)
+        c1, c2 = st.columns([3, 1])
+        smtp_host = c1.text_input("SMTP Host", value="mail.grf.bg.ac.rs")
+        smtp_port = c2.number_input("Port", value=587, step=1, min_value=1)
+
+        c3, c4 = st.columns(2)
+        from_addr = c3.text_input("Sender Email", value="nmilovanovic@grf.bg.ac.rs")
+        from_name = c4.text_input("Sender Name",  value="Никола Миловановић")
+
+        password = st.text_input("Password", type="password")
+
+        c5, c6 = st.columns(2)
+        subject = c5.text_input("Subject", value="Путна инфраструктура, поставка задатка")
+        bcc_raw = c6.text_input("BCC (comma-separated)", value="904_22@student.grf.bg.ac.rs")
+
+        c7, c8 = st.columns(2)
+        batch_size = c7.number_input("Batch size", value=40, min_value=1)
+        sleep_sec  = c8.number_input("Sleep between batches (sec)", value=30, min_value=0)
+
         st.form_submit_button("Save config")
 
 # ── Right column: file + preview + send ──────────────────────────────────────
@@ -67,11 +76,7 @@ with col_send:
     st.subheader("Data & Send")
 
     uploaded = st.file_uploader("Upload Excel file", type=["xlsx", "xls"])
-    st.caption(
-        "Required columns in the selected sheet: "
-        "**`mail`** (recipient address) · **`msg`** (message body, use `\\n` for line breaks). "
-        "The sheet is selected below — defaults to `input`."
-    )
+    st.caption("Required columns: **`mail`** · **`msg`** (use `\\n` for line breaks). Sheet defaults to `input`.")
 
     if uploaded is not None:
         file_bytes = uploaded.read()
@@ -112,7 +117,7 @@ with col_send:
 
             preview = df_valid[["mail", "msg"]].head(5).copy()
             preview["msg"] = preview["msg"].str[:80] + "…"
-            st.dataframe(preview, use_container_width=True)
+            st.dataframe(preview, use_container_width=True, height=210)
 
             st.session_state.df = df_valid
 
