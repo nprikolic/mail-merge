@@ -70,7 +70,7 @@ with col_send:
     st.caption(
         "Required columns in the selected sheet: "
         "**`mail`** (recipient address) · **`msg`** (message body, use `\\n` for line breaks). "
-        "The sheet is selected below — defaults to `komb_zadatak2`."
+        "The sheet is selected below — defaults to `input`."
     )
 
     if uploaded is not None:
@@ -82,7 +82,7 @@ with col_send:
             st.session_state.df = None
 
     if st.session_state.sheet_names:
-        default_sheet = "komb_zadatak2"
+        default_sheet = "input"
         default_idx = (
             st.session_state.sheet_names.index(default_sheet)
             if default_sheet in st.session_state.sheet_names
